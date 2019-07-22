@@ -4,7 +4,7 @@
 This is the official repo for the ACL 2019 paper ["When a Good Translation is Wrong in Context: Context-Aware Machine Translation Improves on Deixis, Ellipsis, and Lexical Cohesion"](https://arxiv.org/abs/1905.05979).
 <img src="./resources/acl_empty.png" title="paper logo"/>
 
-Read the official blog post for the details! TODO: add link
+Read the official [blog post](https://lena-voita.github.io/posts/acl19_context.html) for the details!
 
 #### Bibtex
 ```
@@ -29,13 +29,23 @@ In the paper, we
 
 * create contrastive test sets specifically addressing the most frequent phenomena (deixis, ellipsis, lexical cohesion);
 
-* introduce CADec (Context-Aware Decoder) - a two-pass machine translation model which first produces a draft translation of the current sentence, then corrects it using context.
+* propose a novel and realistic set-up for context-aware NMT with a large amount of sentence-level data and much less of document-level data;
+
+* introduce a model for this set-up (Context-Aware Decoder, aka CADec) - a two-pass machine translation model which first produces a draft translation of the current sentence, then corrects it using context.
 
 In this repo, we provide code and describe steps needed to reproduce our experiments. We also release consistency test sets for evaluation of several discourse phenomena (deixis, ellipsis and lexical cohesion) and provide the training data we used.
 
 ## CADec: Context-Aware Decoder
+CADec is specifically designed for a novel setting with a lot of sentence-level data, only a small subset of which is at the document level. 
+
+In our method, the initial translation produced by a baseline context-agnostic model is refined by a context-aware system which is trained on a small document-level subset of parallel data. As the first-pass translation is produced by a strong model, we expect no loss in general performance when training the second part on a smaller dataset.
+Look at the illustration of this process.
 
 ![cadec_gif](./resources/gif_crop_lossy100.gif)
+
+More formally, the first part of the model is a context-agnostic model (we refer to it as the base model), and the second one is a context-aware decoder (CADec) which refines context-agnostic translations using context. The base model is trained on sentence-level data and then fixed. It is used only to sample context-agnostic translations and to get vector representations of the source and translated sentences. CADec is trained only on data with context. 
+
+At training time, to get a draft translation of the current sentence we either sample a translation from the base model or use a corrupted version of the reference translation with probability `p = 0.5`. At test time, draft translation is obtained from the base model using beam search.
 
 
 ---
@@ -59,7 +69,7 @@ Here is an example of how to tokenize (and lowercase) you data:
 cat text_lines.en | moses-tokenizer en | python3 -c "import sys; print(sys.stdin.read().lower())" > text_lines.en.tok
 ```
 
-For the OpenSubtitles18 dataset (in particular, the data sets we used in the paper), you do not need this step since the data is already tokenized.
+For the OpenSubtitles18 dataset (in particular, the data sets we used in the paper), you do not need this step since the data is already tokenized (you can just lowercase it).
 
 ### BPE-ization
 Learn BPE rules:
@@ -104,7 +114,7 @@ Each training script has a thorough description of the parameters and explanatio
 
 
 ### Data
-First, you need to specify your directory with the [good-translation-wrong-in-context](./) repo, data directory and train/dev file names.
+First, you need to specify your directory with the [good-translation-wrong-in-context](https://github.com/lena-voita/good-translation-wrong-in-context) repo, data directory and train/dev file names.
 ```
 REPO_DIR="../" # insert the dir to the good-translation-wrong-in-context repo
 DATA_DIR="../" # insert your datadir
@@ -355,5 +365,5 @@ Training data is [here](https://www.dropbox.com/s/5drjpx07541eqst/acl19_good_tra
 consistency test sets for the evaluation of the discourse phenomena used in the paper are [here](./consistency_testsets).
 
 
-TODO: add description and scripts
+Coming soon: description and scripts!
 
