@@ -80,6 +80,9 @@ Apply BPE rules to your data:
 ```
 /path_to_this_repo/lib/tools/apply_bpe.py  --bpe_rules ./bpe_rules.en  < text_lines.en.tok > text_lines.en.bpeized
 ```
+
+When running BPE segmentation on context-aware dataset, make sure you process each sentence separately and keep all `_eos` tokens whole.
+
 ---
 ## Model training
 
