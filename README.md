@@ -1,7 +1,7 @@
 
 ## When a Good Translation is Wrong in Context
 
-This is the official repo for the ACL 2019 paper ["When a Good Translation is Wrong in Context: Context-Aware Machine Translation Improves on Deixis, Ellipsis, and Lexical Cohesion"](https://arxiv.org/abs/1905.05979).
+This is the official repo for the ACL 2019 paper ["When a Good Translation is Wrong in Context: Context-Aware Machine Translation Improves on Deixis, Ellipsis, and Lexical Cohesion"](https://www.aclweb.org/anthology/P19-1116).
 <img src="./resources/acl_empty.png" title="paper logo"/>
 
 Read the official [blog post](https://lena-voita.github.io/posts/acl19_context.html) for the details!
