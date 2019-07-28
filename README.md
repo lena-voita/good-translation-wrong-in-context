@@ -18,6 +18,8 @@ Read the official [blog post](https://lena-voita.github.io/posts/acl19_context.h
     year = "2019",
     address = "Florence, Italy",
     publisher = "Association for Computational Linguistics",
+    url = "https://www.aclweb.org/anthology/P19-1116",
+    pages = "1198--1212",
 }
 ```
 
