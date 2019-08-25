@@ -370,5 +370,66 @@ Training data is [here](https://www.dropbox.com/s/5drjpx07541eqst/acl19_good_tra
 consistency test sets for the evaluation of the discourse phenomena used in the paper are [here](./consistency_testsets).
 
 
-Coming soon: description and scripts!
+
+## Description
+
+[Contrastive test sets](./consistency_testsets) are test sets for targeted evaluation of several discourse phenomena: deixis, ellipsis (two test sets for VP ellipsis and morphological inflection) and lexical cohesion. Each test set contains contrastive examples. It is specifically designed to test the ability of a system to adapt to contextual information and handle the phenomenon under consideration. 
+
+Size of test sets: total number of test instances and with regard to the latest context sentence with politeness indication or with the named entity under consideration. For ellipsis, we distinguish whether a model has to predict correct noun phrase inflection, or correct verb sense (VP ellipsis).
+
+
+|                  | total | 1st  | 2nd  | 3rd  |
+|------------------|-------|------|------|------|
+| deixis           | 3000  | 1000 | 1000 | 1000 |
+| lex.cohesion     | 2000  | 855  | 630  | 515  |
+| ellipsis (infl.) | 500   |      |      |      |
+| ellipsis (VP)    | 500   |      |      |      |
+
+
+Each test instance consists of a true example (sequence of sentences and their reference translation from the data) and several contrastive translations which differ from the true one only in the considered aspect. Look at the example of test instance for VP ellipsis. 
+
+<img src="./resources/task_ell_vp-min.png" title="task_example"/>
+
+The system is asked to score each candidate example, and we compute the system accuracy as the proportion of times the true translation is preferred over the contrastive ones. 
+
+__Important note__: all contrastive translations we use are correct plausible translations at a sentence level, and only context reveals the errors we introduce.
+
+For more detals about the test sets and phenomena read [the paper](https://www.aclweb.org/anthology/P19-1116) or the [blog post](https://lena-voita.github.io/posts/acl19_context.html).
+
+
+## Usage
+### 1. Produce scores for test examples using model.
+In [this directory](https://github.com/lena-voita/good-translation-wrong-in-context/tree/master/consistency_testsets/scoring_data) you will find `testset_name.src` and `testset_name.dst` files for each of the test sets (`deixis_test`, `deixis_dev`, `lex_cohesion_test`, `lex_cohesion_dev`, `ellipsis_vp`, `ellipsis_infl`). Each line contains 4 sentences (3 context, 1 current) separated with the `_eos` token. For example, source sentences look like this:
+
+```More of the secret sauce , as the kids say . _eos Kids don 't say that , Grandpa . _eos Oh , I thought they did . _eos Some do .```,
+
+target also look similarly:
+
+```Побольше " секретного соуса " , как говорят дети . _eos Дети так уже не говорят , дедушка . _eos А я думал , что говорят . _eos Некоторые знают .```
+
+For each pair of source fragment and possible target you have to produce scores by your model (evaluate loss, the lower the better). If you are using our model, the notebook [3_Score_consistency_test_set_baseline.ipynb](./notebooks/3_Score_consistency_test_set_baseline.ipynb) shows how to produce the scores. After you finished, write the scores in a text file, score for each instance on a separate line. For example, the resulting file may look like this:
+
+```
+68.73841
+66.426445
+67.603836
+13.176573
+17.481186
+17.209515
+22.146257
+...
+```
+
+### 2. Evaluate your scores.
+Use the evaluation script:
+
+```python3 /path_to_this_repo/scripts/evaluate_consistency.py --repo-dir path_to_this_repo --test testset_name --scores path_to_your_scores```
+
+Parameters:
+
+`--repo-dir` - path to your local version of the `good-translation-wring-in-context` repo
+
+`--test` - name of the test set. Has to be one of these:  `deixis_test`, `deixis_dev`, `lex_cohesion_test`, `lex_cohesion_dev`, `ellipsis_vp`, `ellipsis_infl`
+
+`--scores` - your file with the scores (as described above)
 
