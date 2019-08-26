@@ -407,7 +407,7 @@ target also look similarly:
 
 ```Побольше " секретного соуса " , как говорят дети . _eos Дети так уже не говорят , дедушка . _eos А я думал , что говорят . _eos Некоторые знают .```
 
-For each pair of source fragment and possible target you have to produce scores by your model (evaluate loss, the lower the better). If you are using our model, the notebook [3_Score_consistency_test_set_baseline.ipynb](./notebooks/3_Score_consistency_test_set_baseline.ipynb) shows how to produce the scores. After you finished, write the scores in a text file, score for each instance on a separate line. For example, the resulting file may look like this:
+For each pair of source fragment and possible target you have to produce scores by your model (evaluate loss, the lower the better). If you are using our model, the notebook [4_Score_consistency_test_set_CADec.ipynb](./notebooks/4_Score_consistency_test_set_CADec.ipynb) shows how to produce the scores. After you finished, write the scores in a text file, score for each instance on a separate line. For example, the resulting file may look like this:
 
 ```
 68.73841
