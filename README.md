@@ -11,7 +11,7 @@ Read the official [blog post](https://lena-voita.github.io/posts/acl19_context.h
 1. [CADec: Context-Aware Decoder](#cadec)
 1. [DocRepair: Context-Aware Monolingual Repair](#docrepair)
 1. [Experiments: how to train the models](#experiments)
-1. [Consistency test sets for evaluating discourse phenomena](#consistency-test-sets)
+1. [Consistency test sets for evaluation of several discourse phenomena](#consistency-test-sets)
 1. [Training data (for both CADec and DocRepair)](#training-data)
 
 #### Bibtex
