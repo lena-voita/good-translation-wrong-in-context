@@ -1,7 +1,7 @@
 
 ## When a Good Translation is Wrong in Context
 
-This is the official repo for the ACL 2019 paper ["When a Good Translation is Wrong in Context: Context-Aware Machine Translation Improves on Deixis, Ellipsis, and Lexical Cohesion"](https://www.aclweb.org/anthology/P19-1116).
+This is the official repo for the ACL 2019 paper ["When a Good Translation is Wrong in Context: Context-Aware Machine Translation Improves on Deixis, Ellipsis, and Lexical Cohesion"](https://www.aclweb.org/anthology/P19-1116) and the EMNLP19 paper ["Context-Aware Monolingual Repair for Neural Machine Translation"]().
 
 Training data is [here](https://www.dropbox.com/s/5drjpx07541eqst/acl19_good_translation_wrong_in_context.zip?dl=0),
 consistency test sets for the evaluation of the discourse phenomena used in the paper are [here](./consistency_testsets).
@@ -13,18 +13,30 @@ Read the official [blog post](https://lena-voita.github.io/posts/acl19_context.h
 
 #### Bibtex
 ```
-@inproceedings{voita-etal-2019-when,
+@inproceedings{voita-etal-2019-good,
     title = "When a Good Translation is Wrong in Context: Context-Aware Machine Translation Improves on Deixis, Ellipsis, and Lexical Cohesion",
     author = "Voita, Elena  and
       Sennrich, Rico  and
       Titov, Ivan",
-    booktitle = "Proceedings of the 57th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)",
+    booktitle = "Proceedings of the 57th Annual Meeting of the Association for Computational Linguistics",
     month = jul,
     year = "2019",
     address = "Florence, Italy",
     publisher = "Association for Computational Linguistics",
     url = "https://www.aclweb.org/anthology/P19-1116",
     pages = "1198--1212",
+}
+
+@inproceedings{voita-etal-2019-context,
+    title = "Context-Aware Monolingual Repair for Neural Machine Translation",
+    author = "Voita, Elena  and
+      Sennrich, Rico  and
+      Titov, Ivan",
+    booktitle = "Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and 9th International Joint Conference on Natural Language Processing",
+    month = nov,
+    year = "2019",
+    address = "Hong Kong, China",
+    publisher = "Association for Computational Linguistics",
 }
 ```
 
