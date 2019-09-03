@@ -6,8 +6,8 @@ DATA_DIR="../" # insert your datadir
 NMT="${REPO_DIR}/scripts/nmt.py"
 
 # path to preprocessed data (tokenized, bpe-ized)
-train_src="${DATA_DIR}/train.src.1m"
-train_dst="${DATA_DIR}/train.dst.1m"
+train_src="${DATA_DIR}/train.src"
+train_dst="${DATA_DIR}/train.dst"
 dev_src="${DATA_DIR}/dev.src"
 dev_dst="${DATA_DIR}/dev.dst"
 
