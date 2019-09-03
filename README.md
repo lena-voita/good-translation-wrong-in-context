@@ -3,15 +3,15 @@
 
 This is the official repo for the ACL 2019 paper ["When a Good Translation is Wrong in Context: Context-Aware Machine Translation Improves on Deixis, Ellipsis, and Lexical Cohesion"](https://www.aclweb.org/anthology/P19-1116) and the EMNLP19 paper ["Context-Aware Monolingual Repair for Neural Machine Translation"]().
 
-Training data is [here](https://www.dropbox.com/s/5drjpx07541eqst/acl19_good_translation_wrong_in_context.zip?dl=0),
-consistency test sets for the evaluation of the discourse phenomena used in the paper are [here](./consistency_testsets).
-In the following, we describe how to train the models, then give an overview of the consistency test sets and provide instructions how to use them.
 
 <img src="./resources/acl_emnlp_empty-min.png" title="paper logo"/>
 
 Read the official [blog post](https://lena-voita.github.io/posts/acl19_context.html) for the details!
 
-1. [test sets](#consistency-test-sets)
+1. [Intriduction](#introduction)
+1. [Context-Aware Decoder (CADec)](#cadec)
+1. [Consistency test sets for evaluating discourse phenomena](#consistency-test-sets)
+1. [Training data](#training-data)
 
 #### Bibtex
 ```
@@ -42,6 +42,7 @@ Read the official [blog post](https://lena-voita.github.io/posts/acl19_context.h
 }
 ```
 
+<a name="introduction"></a>
 ## Introduction
 
 In the paper, we
@@ -56,6 +57,7 @@ In the paper, we
 
 In this repo, we provide code and describe steps needed to reproduce our experiments. We also release consistency test sets for evaluation of several discourse phenomena (deixis, ellipsis and lexical cohesion) and provide the training data we used.
 
+<a name="cadec"></a>
 ## CADec: Context-Aware Decoder
 CADec is specifically designed for a novel setting with a lot of sentence-level data, only a small subset of which is at the document level. 
 
@@ -453,3 +455,9 @@ Parameters:
 
 `--scores` - your file with the scores (as described above)
 
+<a name="training-data"></a>
+# Training data
+
+Training data is [here](https://www.dropbox.com/s/5drjpx07541eqst/acl19_good_translation_wrong_in_context.zip?dl=0),
+consistency test sets for the evaluation of the discourse phenomena used in the paper are [here](./consistency_testsets).
+In the following, we describe how to train the models, then give an overview of the consistency test sets and provide instructions how to use them.
