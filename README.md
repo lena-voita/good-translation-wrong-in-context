@@ -56,7 +56,7 @@ In the ACL paper, we
 
 * introduce a model for this set-up (Context-Aware Decoder, aka CADec) - a two-pass machine translation model which first produces a draft translation of the current sentence, then corrects it using context.
 
-In the EMNLP paper, we go further in using less document-level data and
+In the EMNLP paper, we go further in using less of document-level data and
 
 * introduce DocRepair - the first approach to context-aware machine translation using only monolingual document-level data;
 
