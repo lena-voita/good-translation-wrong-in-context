@@ -151,16 +151,18 @@ params=(
 
     # Optimization.
     # This is the optimizer used in the original Transformer.
-    --optimizer lazy_adam
-    --optimizer-opts '{'"'"'beta1'"'"': 0.9, '"'"'beta2'"'"': 0.998}'
+    #--optimizer lazy_adam
+    #--optimizer-opts '{'"'"'beta1'"'"': 0.9, '"'"'beta2'"'"': 0.998}'
 
     # Alternative optimizer opts in case you do not have several gpus.
     # sync_every_steps=4 means that you accumulate gradients for 4 steps before making an update.
     # This is equivalent to having 'sync_every_steps' gpus.
     # The actual batch size will be then batch-len * sync_every_steps
     # (or batch-len * num_gpus if you are using the first version of optimizer-opts)
-    #--optimizer-opts '{'"'"'beta1'"'"': 0.9, '"'"'beta2'"'"': 0.998,
-    #                   '"'"'sync_every_steps'"'"': 4, '"'"'average_grads'"'"': True, }'  \
+    # If you are using 4 gpus, then set sync_every_steps=2 to get the needed batch size 32000 in total.
+    # (batch_size = batch-len * num_gpus * sync_every_steps)
+    --optimizer-opts '{'"'"'beta1'"'"': 0.9, '"'"'beta2'"'"': 0.998,
+                       '"'"'sync_every_steps'"'"': 2, '"'"'average_grads'"'"': True, }'  \
 
     # Learning rate schedule.
     # This is the usual Transformer learning rate schedule.
