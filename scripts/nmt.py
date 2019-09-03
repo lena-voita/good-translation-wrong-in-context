@@ -21,7 +21,8 @@ from lib.task.seq2seq.tickers import *
 from lib.task.seq2seq.problems.default import DefaultProblem
 from lib.task.seq2seq.data import load_parallel, random_block_reader, filter_by_len, locally_sorted_by_len, maxlen, \
     batch_cost, form_batches, form_adaptive_batches, form_adaptive_batches_windowed, \
-    form_adaptive_batches_windowed_mt_multi_ctx_with_dst, multi_ctx_with_dst_weight_func
+    form_adaptive_batches_windowed_mt_multi_ctx_with_dst, multi_ctx_with_dst_weight_func, \
+    form_adaptive_batches_windowed_monolingual_repair, monolingual_repair_weight_func
 
 from lib.session import ProfilableSessionWrapper
 from lib.util import load_class, merge_dicts
@@ -311,6 +312,13 @@ def TRAIN(args):
             x = form_adaptive_batches_windowed_mt_multi_ctx_with_dst(
                 x,
                 weight_func=multi_ctx_with_dst_weight_func,
+                max_size=args.batch_len,
+                split_len=args.split_len,
+                batch_size_max=args.batch_size_max)
+        elif args.batch_maker == 'monolingual_repair':
+            x = form_adaptive_batches_windowed_monolingual_repair(
+                x,
+                weight_func=monolingual_repair_weight_func,
                 max_size=args.batch_len,
                 split_len=args.split_len,
                 batch_size_max=args.batch_size_max)
