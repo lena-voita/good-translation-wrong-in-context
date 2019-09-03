@@ -3,15 +3,16 @@
 
 This is the official repo for the ACL 2019 paper ["When a Good Translation is Wrong in Context: Context-Aware Machine Translation Improves on Deixis, Ellipsis, and Lexical Cohesion"](https://www.aclweb.org/anthology/P19-1116) and the EMNLP19 paper ["Context-Aware Monolingual Repair for Neural Machine Translation"]().
 
+Read the official [blog post](https://lena-voita.github.io/posts/acl19_context.html) for the details!
 
 <img src="./resources/acl_emnlp_empty-min.png" title="paper logo"/>
 
-Read the official [blog post](https://lena-voita.github.io/posts/acl19_context.html) for the details!
-
-1. [Intriduction](#introduction)
-1. [Context-Aware Decoder (CADec)](#cadec)
+1. [Introduction](#introduction)
+1. [CADec: Context-Aware Decoder](#cadec)
+1. [DocRepair: Context-Aware Monolingual Repair](#docrepair)
+1. [Experiments: how to train models](#experiments)
 1. [Consistency test sets for evaluating discourse phenomena](#consistency-test-sets)
-1. [Training data](#training-data)
+1. [Training data (for both CADec and DocRepair)](#training-data)
 
 #### Bibtex
 ```
@@ -72,6 +73,7 @@ At training time, to get a draft translation of the current sentence we either s
 
 
 ---
+<a name="experiments"></a>
 # Experiments
 
 ## Requirements
