@@ -207,7 +207,7 @@ hp = {
 ```
 This set of parameters corresponds to Transformer-base [(Vaswani et al., 2017)](https://papers.nips.cc/paper/7181-attention-is-all-you-need). 
 
-#### CADec
+#### CADec training
 
 To train CADec, you have to specify another model:
 ```
