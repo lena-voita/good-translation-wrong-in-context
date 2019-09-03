@@ -7,7 +7,7 @@ Training data is [here](https://www.dropbox.com/s/5drjpx07541eqst/acl19_good_tra
 consistency test sets for the evaluation of the discourse phenomena used in the paper are [here](./consistency_testsets).
 In the following, we describe how to train the models, then give an overview of the consistency test sets and provide instructions how to use them.
 
-<img src="./resources/acl_empty.png" title="paper logo"/>
+<img src="./resources/acl_emnlp_empty-min.png" title="paper logo"/>
 
 Read the official [blog post](https://lena-voita.github.io/posts/acl19_context.html) for the details!
 
