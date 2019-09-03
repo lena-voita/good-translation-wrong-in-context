@@ -138,8 +138,9 @@ params=(
     --max-dstlen 500
 
     # How to form batches.
-    # The only thing you have to be careful about is batch-len:
-    # is has to be about 16000 in total. Here is 4000 for 4 gpus: 4 * 4000 in total.
+    # Note that for DocRepair we use different batch-maker: multi-ctx-with-dst
+    # This means that the length of an example is calculated differently from the baseline.
+    # You need batch-len * num_gpus to be about 32000 (or batch-len * num_gpus * sync_every_steps; see below)
     --batch-len 4000    # YOU MAY WANT TO CHANGE THIS
     --batch-maker monolingual_repair
     --shuffle-len 100000
