@@ -10,7 +10,7 @@ Read the official [blog post](https://lena-voita.github.io/posts/acl19_context.h
 1. [Introduction](#introduction)
 1. [CADec: Context-Aware Decoder](#cadec)
 1. [DocRepair: Context-Aware Monolingual Repair](#docrepair)
-1. [Experiments: how to train models](#experiments)
+1. [Experiments: how to train the models](#experiments)
 1. [Consistency test sets for evaluating discourse phenomena](#consistency-test-sets)
 1. [Training data (for both CADec and DocRepair)](#training-data)
 
@@ -46,7 +46,7 @@ Read the official [blog post](https://lena-voita.github.io/posts/acl19_context.h
 <a name="introduction"></a>
 ## Introduction
 
-In the paper, we
+In the ACL paper, we
 
 * find the phenomena which cause context-agnostic translations to be inconsistent with each other;
 
@@ -55,6 +55,14 @@ In the paper, we
 * propose a novel and realistic set-up for context-aware NMT with a large amount of sentence-level data and much less of document-level data;
 
 * introduce a model for this set-up (Context-Aware Decoder, aka CADec) - a two-pass machine translation model which first produces a draft translation of the current sentence, then corrects it using context.
+
+In the EMNLP paper, we go further in using less document-level data and
+
+* introduce DocRepair - the first approach to context-aware machine translation using only monolingual document-level data;
+
+* show that DocRepair improves translation quality as measured with BLEU, evaluation using contrastive test sets (introduced in the ACL paper) and human evaluation;
+
+* show which discourse phenomena are hard to capture using only monolingual document-level data.
 
 In this repo, we provide code and describe steps needed to reproduce our experiments. We also release consistency test sets for evaluation of several discourse phenomena (deixis, ellipsis and lexical cohesion) and provide the training data we used.
 
