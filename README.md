@@ -307,17 +307,18 @@ In contrast to the baseline and CADec, for this model we set `"share_emb": True`
 
 The options you may want to change are:
 
-`train_mode` - distribution over "sample", "noise", "beam" - which translation of a sentence to use
-* sample - round-trip translation is sampled translation (of a back-translated sentence)
-* beam - round-trip translation is translation with beam search (of a back-translated sentence)
-* noise - noise version of target sentence
-We use samples: {"sample": 1, "noise": 0., "beam": 0.}
+`train_mode` - distribution over `"sample"`, `"noise"`, `"beam"` - which translation of a sentence to use
+* `sample` - round-trip translation is sampled translation (of a back-translated sentence)
+* `beam` - round-trip translation is translation with beam search (of a back-translated sentence)
+* `noise` - noise version of target sentence
+
+We use samples: `{"sample": 1, "noise": 0., "beam": 0.}`
 
 `dropout` - for each possible mode in train_mode set the value of token dropout (probability with which each token is replaced with random).
 
 ---
 ### Problem (loss function)
-Problem is the training objective for you model and in general it tells _how_ to train your model. For the baseline, it's the standard cross-entropy loss with no extra options:
+Problem is the training objective for you model and in general it tells _how_ to train your model. For the baseline and DocRepair, it's the standard cross-entropy loss with no extra options:
 ```
 params=(
     ...
@@ -426,6 +427,7 @@ For CADec it is sum of
 This means that values of "batch-len" in baseline and CADec configs are not comparable (because of different batch-makers).
  To approximately match the baseline batch in the number of translation instances, you need batch size of approximately 150000 in total. For example, with 4 gpus you can set batch-len 7500 and sync_every_steps=5: 5 * 4 * 7500 = 150000 in total.
 
+For DocRepair, also a specific batch-maker is used. For this model, you have to have the total batch-len of 32000.
 
 ---
 ### Other options
