@@ -70,7 +70,7 @@ In this repo, we provide code and describe steps needed to reproduce our experim
 
 <a name="cadec"></a>
 ## CADec: Context-Aware Decoder
-CADec is specifically designed for a novel setting with a lot of sentence-level data, only a small subset of which is at the document level. 
+CADec is __specifically__ designed for __a novel setting__ with a lot of sentence-level data, __only a small subset of which is at the document level__. 
 
 In our method, the initial translation produced by a baseline context-agnostic model is refined by a context-aware system which is trained on a small document-level subset of parallel data. As the first-pass translation is produced by a strong model, we expect no loss in general performance when training the second part on a smaller dataset.
 Look at the illustration of this process.
@@ -83,6 +83,8 @@ At training time, to get a draft translation of the current sentence we either s
 
 <a name="docrepair"></a>
 ## DocRepair: Context-Aware Monolingual Repair
+
+We push further the idea of using less document-level parallel data and propose __the first approach__ of using __only monolingual document-level data__ for context-aware MT: the DocRepair model.
 
 The DocRepair model corrects inconsistencies between sentence-level translations of a context-agnostic MT system (baseline system). It does not use any states of a trained MT model whose outputs it corrects and therefore can in principle be trained to correct translations from any black-box MT system. 
 
