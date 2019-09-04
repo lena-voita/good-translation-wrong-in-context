@@ -470,6 +470,8 @@ params=(
 
 The test sets are [here](./consistency_testsets).
 
+In the following, we give an overview of the consistency test sets and provide instructions how to use them.
+
 ## Description
 
 [Contrastive test sets](./consistency_testsets) are test sets for targeted evaluation of several discourse phenomena: deixis, ellipsis (two test sets for VP ellipsis and morphological inflection) and lexical cohesion. Each test set contains contrastive examples. It is specifically designed to test the ability of a system to adapt to contextual information and handle the phenomenon under consideration. 
@@ -535,6 +537,16 @@ Parameters:
 <a name="training-data"></a>
 # Training data
 
+## Baseline (sentence-level)
 Training data is [here](https://www.dropbox.com/s/5drjpx07541eqst/acl19_good_translation_wrong_in_context.zip?dl=0),
-consistency test sets for the evaluation of the discourse phenomena used in the paper are [here](./consistency_testsets).
-In the following, we describe how to train the models, then give an overview of the consistency test sets and provide instructions how to use them.
+in the `context_agnostic` folder.
+
+## CADec data
+Training data is [here](https://www.dropbox.com/s/5drjpx07541eqst/acl19_good_translation_wrong_in_context.zip?dl=0), in the `context_aware` folder.
+
+Data with context consists of groups of 4 consecutive sentences, separated by the token `_eos`. This is the format which `train_cadec.sh` receives as the training data.
+
+## DocRepair
+The data is [here]().
+
+Note that the format of the data and description is in the data folder in the `readme.txt` file. The data is in the format, which is used in our implementation of the DocRepair model. If you are using our inplementation of the DocRepair model, but  different data, you will have to put it in the format described in the `readme.txt`.
