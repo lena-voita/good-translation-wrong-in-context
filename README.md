@@ -96,15 +96,17 @@ Formally, forming a __training__ minibatch for the DocRepair model involves the 
 
 Look at the illustration.
 
-<img src="./resources/train_doc_repair_v_less_arrows-min.png" width="500">
+<img src="./resources/train_doc_repair_v_less_arrows-min.png" width="600">
 First, round-trip translations of individual sentences are produced to form an inconsistent text fragment (in the example, both genders of the speaker and the cat became inconsistent). Then, a repair model is trained to produce an original text from the inconsistent one.
 
+.
 
 At __test time__, the process of getting document-level translations is two-step:
 * produce translations of isolated sentences using a context-agnostic MT model;
 * apply the DocRepair model to a sequence of context-agnostic translations to correct inconsistencies between translations.
 
 The illustration is shown on the figure:
+
 <img src="./resources/test_doc_repair-min.png" width="500">
 
 
