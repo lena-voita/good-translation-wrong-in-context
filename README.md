@@ -554,6 +554,6 @@ Training data is [here](https://www.dropbox.com/s/5drjpx07541eqst/acl19_good_tra
 Data with context consists of groups of 4 consecutive sentences, separated by the token `_eos`. This is the format which `train_cadec.sh` receives as the training data.
 
 ## DocRepair data
-The data is [here]().
+The data is [here](https://www.dropbox.com/s/06i1yz5zxy2o1ve/emnlp19_docrepair.zip?dl=0).
 
 Note that the format of the data and description is in the data folder in the `readme.txt` file. The data is in the format, which is used in our implementation of the DocRepair model. If you are using our implementation of the DocRepair model, but  different data, you will have to put your data in the format described in the `readme.txt`.
