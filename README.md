@@ -539,8 +539,8 @@ Parameters:
 
 |     model        |   |  | size  | 
 |------------------|-------|------|------|
-| baseline    | sentence-level | bilingual  | 6m | 
-| CADec    | document-level | bilingual  | 1.5m  | 
+| baseline    | sentence-level | parallel  | 6m | 
+| CADec    | document-level | parallel  | 1.5m  | 
 | DocRepair | document-level   |   monolingual   |  30m    |   
 
 
