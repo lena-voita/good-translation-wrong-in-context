@@ -537,6 +537,13 @@ Parameters:
 <a name="training-data"></a>
 # Training data
 
+|     model        |   |  | size  | 
+|------------------|-------|------|------|
+| baseline    | sentence-level | bilingual  | 6m | 
+| CADec    | document-level | bilingual  | 1.5m  | 
+| DocRepair | document-level   |   monolingual   |  30m    |   
+
+
 ## Baseline (sentence-level)
 Training data is [here](https://www.dropbox.com/s/5drjpx07541eqst/acl19_good_translation_wrong_in_context.zip?dl=0),
 in the `context_agnostic` folder.
@@ -549,4 +556,4 @@ Data with context consists of groups of 4 consecutive sentences, separated by th
 ## DocRepair
 The data is [here]().
 
-Note that the format of the data and description is in the data folder in the `readme.txt` file. The data is in the format, which is used in our implementation of the DocRepair model. If you are using our inplementation of the DocRepair model, but  different data, you will have to put it in the format described in the `readme.txt`.
+Note that the format of the data and description is in the data folder in the `readme.txt` file. The data is in the format, which is used in our implementation of the DocRepair model. If you are using our implementation of the DocRepair model, but  different data, you will have to put your data in the format described in the `readme.txt`.
