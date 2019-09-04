@@ -86,15 +86,27 @@ At training time, to get a draft translation of the current sentence we either s
 
 The DocRepair model corrects inconsistencies between sentence-level translations of a context-agnostic MT system (baseline system). It does not use any states of a trained MT model whose outputs it corrects and therefore can in principle be trained to correct translations from any black-box MT system. 
 
-The DocRepair model requires only monolingual document-level data in the target language. It is a monolingual sequence-to-sequence model that maps inconsistent groups of sentences into consistent ones. Consistent groups come from monolingual document-level data. To obtain inconsistent groups, each sentence in a group is replaced with its round-trip translation produced in isolation from context. The training scheme of the model is shown on the figure:
+The DocRepair model requires only monolingual document-level data in the target language. It is a monolingual sequence-to-sequence model that maps inconsistent groups of sentences into consistent ones. Consistent groups come from monolingual document-level data. To obtain inconsistent groups, each sentence in a group is replaced with its round-trip translation produced in isolation from context. 
 
-![train_docrepair](./resources/train_doc_repair_v_less_arrows-min.png)
-
-More formally, forming a training minibatch for the DocRepair model involves the following steps:
+Formally, forming a __training__ minibatch for the DocRepair model involves the following steps:
 * sample several groups of sentences from the monolingual data;
 * for each sentence in a group, (i) translate it using a target-to-source MT model, (ii) sample a translation of this back-translated sentence in the source language using a source-to-target MT model;
 * using these round-trip translations of isolated sentences, form an inconsistent version of the initial groups;
 * use inconsistent groups as input for the DocRepair model, consistent ones as output.
+
+Look at the illustration.
+
+<img src="./resources/train_doc_repair_v_less_arrows-min.png" width="500">
+First, round-trip translations of individual sentences are produced to form an inconsistent text fragment (in the example, both genders of the speaker and the cat became inconsistent). Then, a repair model is trained to produce an original text from the inconsistent one.
+
+
+At __test time__, the process of getting document-level translations is two-step:
+* produce translations of isolated sentences using a context-agnostic MT model;
+* apply the DocRepair model to a sequence of context-agnostic translations to correct inconsistencies between translations.
+
+The illustration is shown on the figure:
+<img src="./resources/test_doc_repair-min.png" width="500">
+
 
 
 ---
