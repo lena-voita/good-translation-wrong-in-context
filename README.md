@@ -133,7 +133,7 @@ Here is an example of how to tokenize (and lowercase) you data:
 cat text_lines.en | moses-tokenizer en | python3 -c "import sys; print(sys.stdin.read().lower())" > text_lines.en.tok
 ```
 
-For the OpenSubtitles18 dataset (in particular, the data sets we used in the paper), you do not need this step since the data is already tokenized (you can just lowercase it).
+For the OpenSubtitles18 dataset (in particular, the data sets we used in the papers), you do not need this step since the data is already tokenized (you can just lowercase it).
 
 ### BPE-ization
 Learn BPE rules:
@@ -150,7 +150,7 @@ When running BPE segmentation on context-aware dataset, make sure you process ea
 ---
 ## Model training
 
-In the [scripts](./scripts) folder you can find files `train_baseline.sh` and `train_cadec.sh` with configs for training baseline and CADec model respectively. 
+In the [scripts](./scripts) folder you can find files `train_baseline.sh`, `train_cadec.sh` and `train_docrepair.sh` with configs for training baseline, CADec and the DocRepair model respectively. 
 
 To launch an experiment, do the following (example is for the baseline):
 ```
@@ -279,6 +279,41 @@ The options you may want to change are:
 `max_ctx_sents` - maximum number of context sentences for an example present in your data (3 in our experiments).
 
 `use_dst_ctx` - whether to use dst side of context (as we do) or only use source representations.
+
+#### DpcRepair training
+
+To train DocRepair, you have to specify another model:
+```
+params=(
+...
+--model lib.task.seq2seq.models.DocRepair.Model
+...)
+```
+Model hyperparameters are split into groups; first four are the same as in your baseline and define the baseline cofiguration. DocRepair-specific parameters are:
+```
+hp = {
+     ...
+     "share_emb": True,
+     ...
+     ...
+     "train_mode": {"sample": 1, "noise": 0., "beam": 0.},
+     "dropout": {"sample": {"dropout": 0.1, "method": "random_word"},
+                 "noise": {"dropout": 0.2, "method": "random_word"},
+                 "beam": {"dropout": 0.1, "method": "random_word"}}
+    }
+```
+
+In contrast to the baseline and CADec, for this model we set `"share_emb": True`. This means that input and output embedding layers are shared. This is natural since DocRepair is a monolingual model.
+
+The options you may want to change are:
+
+`train_mode` - distribution over "sample", "noise", "beam" - which translation of a sentence to use
+* sample - round-trip translation is sampled translation (of a back-translated sentence)
+* beam - round-trip translation is translation with beam search (of a back-translated sentence)
+* noise - noise version of target sentence
+We use samples: {"sample": 1, "noise": 0., "beam": 0.}
+
+`dropout` - for each possible mode in train_mode set the value of token dropout (probability with which each token is replaced with random).
 
 ---
 ### Problem (loss function)
