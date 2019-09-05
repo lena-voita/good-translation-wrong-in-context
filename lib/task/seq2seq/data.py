@@ -419,3 +419,79 @@ def form_adaptive_batches_windowed_mt_multi_ctx_with_dst(data,
     for chunk in chunks:
         yield chunk
 
+
+# ================================================================================
+# DST context
+# data format: (item[0], item[1])
+# item[0]: beam_1 _eos ... beam_n _eos_eos ' _eos '.join(samps_1) _eos_eos ... _eos_eos ' _eos '.join(samps_n)
+# iten[1]: dst_1 _eos ... dst_n
+
+def monolingual_repair_weight_func(x):
+    return len(x[1].split())
+
+
+def maxlen_monolingual_repair(x):
+    words = set(x[0].split())
+    splitter = '_eos'
+    if not '_eos' in words and '_BOS_' in words:
+        splitter = '_BOS_'
+    dst_len = len(x[1].split())
+    beam_sents = x[0].split(' _eos_eos ')[0].split(splitter)
+    samples = x[0].split(' _eos_eos ')[1:]
+    src_len = 0
+    for i in range(len(beam_sents)):
+        src_len += max([len(sent.strip().split()) for sent in samples[i].split(splitter) + [beam_sents[i]]])
+    return max(src_len, dst_len)
+
+
+def form_adaptive_batches_monolingual_repair(data, batch_len, batch_size_max=0):
+    seq = iter(data)
+    prev = []
+    max_len = 0
+    done = False
+    while not done:
+        batch = prev
+        try:
+            while True:
+                item = next(seq)
+                max_len = max(max_len, maxlen_monolingual_repair(item))
+                if (len(batch) + 1) * max_len > batch_len or (batch_size_max and len(batch) >= batch_size_max):
+                    prev, max_len = [item], maxlen_monolingual_repair(item)
+                    break
+                batch.append(item)
+        except StopIteration:
+            done = True
+        if batch:
+            yield batch
+
+
+def form_adaptive_batches_windowed_monolingual_repair(data, weight_func=maxlen_monolingual_repair, max_size=5000,
+                                                      split_len=10000, batch_size_max=0):
+    rng = random.Random(42)
+    buf = []
+    last_chunk = []
+    reverse = False
+    for p in data:
+        if len(buf) >= split_len:
+            # Last chunk may contain fewer sentences than others - let's return in to the miller
+            buf += last_chunk
+
+            buf = sorted(buf, key=weight_func, reverse=reverse)
+            chunks = list(form_adaptive_batches_monolingual_repair(buf, max_size, batch_size_max=batch_size_max))
+
+            last_chunk = chunks.pop()
+            buf = []
+
+            reverse = not reverse
+
+            rng.shuffle(chunks)
+            for chunk in chunks:
+                yield chunk
+        buf.append(p)
+
+    buf += last_chunk
+    buf = sorted(buf, key=weight_func, reverse=reverse)
+    chunks = list(form_adaptive_batches_monolingual_repair(buf, max_size, batch_size_max=batch_size_max))
+    rng.shuffle(chunks)
+    for chunk in chunks:
+        yield chunk

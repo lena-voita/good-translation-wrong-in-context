@@ -1,24 +1,29 @@
 
 ## When a Good Translation is Wrong in Context
 
-This is the official repo for the ACL 2019 paper ["When a Good Translation is Wrong in Context: Context-Aware Machine Translation Improves on Deixis, Ellipsis, and Lexical Cohesion"](https://www.aclweb.org/anthology/P19-1116).
-
-Training data is [here](https://www.dropbox.com/s/5drjpx07541eqst/acl19_good_translation_wrong_in_context.zip?dl=0),
-consistency test sets for the evaluation of the discourse phenomena used in the paper are [here](./consistency_testsets).
-In the following, we describe how to train the models, then give an overview of the consistency test sets and provide instructions how to use them.
-
-<img src="./resources/acl_empty.png" title="paper logo"/>
+This is the official repo for 
+* the ACL 2019 paper ["When a Good Translation is Wrong in Context: Context-Aware Machine Translation Improves on Deixis, Ellipsis, and Lexical Cohesion"](https://www.aclweb.org/anthology/P19-1116)  
+* the EMNLP19 paper ["Context-Aware Monolingual Repair for Neural Machine Translation"](https://arxiv.org/abs/1909.01383).
 
 Read the official [blog post](https://lena-voita.github.io/posts/acl19_context.html) for the details!
 
+<img src="./resources/acl_emnlp_empty-min.png" title="paper logo"/>
+
+1. [Introduction](#introduction)
+1. [CADec: Context-Aware Decoder](#cadec)
+1. [DocRepair: Context-Aware Monolingual Repair](#docrepair)
+1. [Experiments: how to train the models](#experiments)
+1. [Consistency test sets for evaluation of several discourse phenomena](#consistency-test-sets)
+1. [Training data (for both CADec and DocRepair)](#training-data)
+
 #### Bibtex
 ```
-@inproceedings{voita-etal-2019-when,
+@inproceedings{voita-etal-2019-good,
     title = "When a Good Translation is Wrong in Context: Context-Aware Machine Translation Improves on Deixis, Ellipsis, and Lexical Cohesion",
     author = "Voita, Elena  and
       Sennrich, Rico  and
       Titov, Ivan",
-    booktitle = "Proceedings of the 57th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)",
+    booktitle = "Proceedings of the 57th Annual Meeting of the Association for Computational Linguistics",
     month = jul,
     year = "2019",
     address = "Florence, Italy",
@@ -26,11 +31,24 @@ Read the official [blog post](https://lena-voita.github.io/posts/acl19_context.h
     url = "https://www.aclweb.org/anthology/P19-1116",
     pages = "1198--1212",
 }
+
+@inproceedings{voita-etal-2019-context,
+    title = "Context-Aware Monolingual Repair for Neural Machine Translation",
+    author = "Voita, Elena  and
+      Sennrich, Rico  and
+      Titov, Ivan",
+    booktitle = "Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and 9th International Joint Conference on Natural Language Processing",
+    month = nov,
+    year = "2019",
+    address = "Hong Kong, China",
+    publisher = "Association for Computational Linguistics",
+}
 ```
 
+<a name="introduction"></a>
 ## Introduction
 
-In the paper, we
+In the ACL paper, we
 
 * find the phenomena which cause context-agnostic translations to be inconsistent with each other;
 
@@ -40,10 +58,19 @@ In the paper, we
 
 * introduce a model for this set-up (Context-Aware Decoder, aka CADec) - a two-pass machine translation model which first produces a draft translation of the current sentence, then corrects it using context.
 
+In the EMNLP paper, we go further in using less of document-level data and
+
+* introduce DocRepair - the first approach to context-aware machine translation using only monolingual document-level data;
+
+* show that DocRepair improves translation quality as measured with BLEU, evaluation using contrastive test sets (introduced in the ACL paper) and human evaluation;
+
+* show which discourse phenomena are hard to capture using only monolingual document-level data.
+
 In this repo, we provide code and describe steps needed to reproduce our experiments. We also release consistency test sets for evaluation of several discourse phenomena (deixis, ellipsis and lexical cohesion) and provide the training data we used.
 
+<a name="cadec"></a>
 ## CADec: Context-Aware Decoder
-CADec is specifically designed for a novel setting with a lot of sentence-level data, only a small subset of which is at the document level. 
+CADec is __specifically__ designed for __a novel setting__ with a lot of sentence-level data, __only a small subset of which is at the document level__. 
 
 In our method, the initial translation produced by a baseline context-agnostic model is refined by a context-aware system which is trained on a small document-level subset of parallel data. As the first-pass translation is produced by a strong model, we expect no loss in general performance when training the second part on a smaller dataset.
 Look at the illustration of this process.
@@ -54,8 +81,40 @@ More formally, the first part of the model is a context-agnostic model (we refer
 
 At training time, to get a draft translation of the current sentence we either sample a translation from the base model or use a corrupted version of the reference translation with probability `p = 0.5`. At test time, draft translation is obtained from the base model using beam search.
 
+<a name="docrepair"></a>
+## DocRepair: Context-Aware Monolingual Repair
+
+We push further the idea of using less document-level parallel data and propose __the first approach__ of using __only monolingual document-level data__ for context-aware MT: the DocRepair model.
+
+The DocRepair model corrects inconsistencies between sentence-level translations of a context-agnostic MT system (baseline system). It does not use any states of a trained MT model whose outputs it corrects and therefore can in principle be trained to correct translations from any black-box MT system. 
+
+The DocRepair model requires only monolingual document-level data in the target language. It is a monolingual sequence-to-sequence model that maps inconsistent groups of sentences into consistent ones. Consistent groups come from monolingual document-level data. To obtain inconsistent groups, each sentence in a group is replaced with its round-trip translation produced in isolation from context. 
+
+Formally, forming a __training__ minibatch for the DocRepair model involves the following steps:
+* sample several groups of sentences from the monolingual data;
+* for each sentence in a group, (i) translate it using a target-to-source MT model, (ii) sample a translation of this back-translated sentence in the source language using a source-to-target MT model;
+* using these round-trip translations of isolated sentences, form an inconsistent version of the initial groups;
+* use inconsistent groups as input for the DocRepair model, consistent ones as output.
+
+Look at the illustration.
+
+<img src="./resources/train_doc_repair_v_less_arrows-min.png" width="600">
+First, round-trip translations of individual sentences are produced to form an inconsistent text fragment (in the example, both genders of the speaker and the cat became inconsistent). Then, a repair model is trained to produce an original text from the inconsistent one.
+
+.
+
+At __test time__, the process of getting document-level translations is two-step:
+* produce translations of isolated sentences using a context-agnostic MT model;
+* apply the DocRepair model to a sequence of context-agnostic translations to correct inconsistencies between translations.
+
+The illustration is shown on the figure:
+
+<img src="./resources/test_doc_repair-min.png" width="500">
+
+
 
 ---
+<a name="experiments"></a>
 # Experiments
 
 ## Requirements
@@ -76,7 +135,7 @@ Here is an example of how to tokenize (and lowercase) you data:
 cat text_lines.en | moses-tokenizer en | python3 -c "import sys; print(sys.stdin.read().lower())" > text_lines.en.tok
 ```
 
-For the OpenSubtitles18 dataset (in particular, the data sets we used in the paper), you do not need this step since the data is already tokenized (you can just lowercase it).
+For the OpenSubtitles18 dataset (in particular, the data sets we used in the papers), you do not need this step since the data is already tokenized (you can just lowercase it).
 
 ### BPE-ization
 Learn BPE rules:
@@ -93,7 +152,7 @@ When running BPE segmentation on context-aware dataset, make sure you process ea
 ---
 ## Model training
 
-In the [scripts](./scripts) folder you can find files `train_baseline.sh` and `train_cadec.sh` with configs for training baseline and CADec model respectively. 
+In the [scripts](./scripts) folder you can find files `train_baseline.sh`, `train_cadec.sh` and `train_docrepair.sh` with configs for training baseline, CADec and the DocRepair model respectively. 
 
 To launch an experiment, do the following (example is for the baseline):
 ```
@@ -191,7 +250,7 @@ hp = {
 ```
 This set of parameters corresponds to Transformer-base [(Vaswani et al., 2017)](https://papers.nips.cc/paper/7181-attention-is-all-you-need). 
 
-#### CADec
+#### CADec training
 
 To train CADec, you have to specify another model:
 ```
@@ -223,9 +282,45 @@ The options you may want to change are:
 
 `use_dst_ctx` - whether to use dst side of context (as we do) or only use source representations.
 
+#### DpcRepair training
+
+To train DocRepair, you have to specify another model:
+```
+params=(
+...
+--model lib.task.seq2seq.models.DocRepair.Model
+...)
+```
+Model hyperparameters are split into groups; first four are the same as in your baseline and define the baseline cofiguration. DocRepair-specific parameters are:
+```
+hp = {
+     ...
+     "share_emb": True,
+     ...
+     ...
+     "train_mode": {"sample": 1, "noise": 0., "beam": 0.},
+     "dropout": {"sample": {"dropout": 0.1, "method": "random_word"},
+                 "noise": {"dropout": 0.2, "method": "random_word"},
+                 "beam": {"dropout": 0.1, "method": "random_word"}}
+    }
+```
+
+In contrast to the baseline and CADec, for this model we set `"share_emb": True`. This means that input and output embedding layers are shared. This is natural since DocRepair is a monolingual model.
+
+The options you may want to change are:
+
+`train_mode` - distribution over `"sample"`, `"noise"`, `"beam"` - which translation of a sentence to use
+* `sample` - round-trip translation is sampled translation (of a back-translated sentence)
+* `beam` - round-trip translation is translation with beam search (of a back-translated sentence)
+* `noise` - noise version of target sentence
+
+We use samples: `{"sample": 1, "noise": 0., "beam": 0.}`
+
+`dropout` - for each possible mode in train_mode set the value of token dropout (probability with which each token is replaced with random).
+
 ---
 ### Problem (loss function)
-Problem is the training objective for you model and in general it tells _how_ to train your model. For the baseline, it's the standard cross-entropy loss with no extra options:
+Problem is the training objective for you model and in general it tells _how_ to train your model. For the baseline and DocRepair, it's the standard cross-entropy loss with no extra options:
 ```
 params=(
     ...
@@ -334,6 +429,7 @@ For CADec it is sum of
 This means that values of "batch-len" in baseline and CADec configs are not comparable (because of different batch-makers).
  To approximately match the baseline batch in the number of translation instances, you need batch size of approximately 150000 in total. For example, with 4 gpus you can set batch-len 7500 and sync_every_steps=5: 5 * 4 * 7500 = 150000 in total.
 
+For DocRepair, also a specific batch-maker is used. For this model, you have to have the total batch-len of 32000.
 
 ---
 ### Other options
@@ -369,12 +465,12 @@ params=(
 
 
 ---
+<a name="consistency-test-sets"></a>
 # Consistency test sets
 
-Training data is [here](https://www.dropbox.com/s/5drjpx07541eqst/acl19_good_translation_wrong_in_context.zip?dl=0),
-consistency test sets for the evaluation of the discourse phenomena used in the paper are [here](./consistency_testsets).
+The test sets are [here](./consistency_testsets).
 
-
+In the following, we give an overview of the consistency test sets and provide instructions how to use them.
 
 ## Description
 
@@ -438,3 +534,26 @@ Parameters:
 
 `--scores` - your file with the scores (as described above)
 
+<a name="training-data"></a>
+# Training data
+
+|     model        |   |  | size  | 
+|------------------|-------|------|------|
+| baseline    | sentence-level | parallel  | 6m | 
+| CADec    | document-level | parallel  | 1.5m  | 
+| DocRepair | document-level   |   monolingual   |  30m    |   
+
+
+## Baseline (sentence-level)
+Training data is [here](https://www.dropbox.com/s/5drjpx07541eqst/acl19_good_translation_wrong_in_context.zip?dl=0),
+in the `context_agnostic` folder.
+
+## CADec data
+Training data is [here](https://www.dropbox.com/s/5drjpx07541eqst/acl19_good_translation_wrong_in_context.zip?dl=0), in the `context_aware` folder.
+
+Data with context consists of groups of 4 consecutive sentences, separated by the token `_eos`. This is the format which `train_cadec.sh` receives as the training data.
+
+## DocRepair data
+The data is [here](https://www.dropbox.com/s/06i1yz5zxy2o1ve/emnlp19_docrepair.zip?dl=0).
+
+Note that the format of the data and description is in the data folder in the `readme.txt` file. The data is in the format, which is used in our implementation of the DocRepair model. If you are using our implementation of the DocRepair model, but  different data, you will have to put your data in the format described in the `readme.txt`.
