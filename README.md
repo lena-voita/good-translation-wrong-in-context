@@ -29,6 +29,7 @@ Read the official [blog post](https://lena-voita.github.io/posts/acl19_context.h
     address = "Florence, Italy",
     publisher = "Association for Computational Linguistics",
     url = "https://www.aclweb.org/anthology/P19-1116",
+    doi = "10.18653/v1/P19-1116",
     pages = "1198--1212",
 }
 
@@ -37,11 +38,14 @@ Read the official [blog post](https://lena-voita.github.io/posts/acl19_context.h
     author = "Voita, Elena  and
       Sennrich, Rico  and
       Titov, Ivan",
-    booktitle = "Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and 9th International Joint Conference on Natural Language Processing",
+    booktitle = "Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP)",
     month = nov,
     year = "2019",
     address = "Hong Kong, China",
     publisher = "Association for Computational Linguistics",
+    url = "https://www.aclweb.org/anthology/D19-1081",
+    doi = "10.18653/v1/D19-1081",
+    pages = "876--885",
 }
 ```
 
