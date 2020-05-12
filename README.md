@@ -134,7 +134,7 @@ __Python:__ The code works with Python 3.5 and 3.6; we recommend using [anaconda
 ## Data preprocessing
 The model training config requires the data to be preprocessed, i.e. tokenized and bpeized. 
 ### Tokenization
-Here is an example of how to tokenize (and lowercase) you data:
+Here is an example of how to tokenize (and lowercase) your data:
 ```
 cat text_lines.en | moses-tokenizer en | python3 -c "import sys; print(sys.stdin.read().lower())" > text_lines.en.tok
 ```
